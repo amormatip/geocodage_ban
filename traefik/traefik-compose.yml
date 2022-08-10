@@ -2,14 +2,16 @@ version: '3'
 
 services:
 
-  proxy:
+  traefik:
     image: traefik:latest
-    command: --docker --docker.domain=docker.localhost
+    container_name: traefik
+    hostname: traefik
     restart: unless-stopped
     networks:
-      - traefik
+      - proxy
     ports:
-      - 80:80
+      - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.toml:/etc/traefik/traefik.toml
@@ -21,6 +23,5 @@ services:
       - "traefik.frontend.entryPoints=http"
 
 networks:
-  traefik:
-    external:
-      name: traefik
+  proxy:
+    name: proxy
